@@ -16,6 +16,7 @@ from testflows.core import *
 from testflows._core.test import TestDecorator
 from testflows._core.testtype import TestSubType
 
+TextStep = TestStep
 TextOutline = TestOutline
 TextBackground = TestBackground
 
