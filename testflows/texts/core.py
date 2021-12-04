@@ -19,6 +19,7 @@ from testflows._core.testtype import TestSubType
 TextStep = TestStep
 TextOutline = TestOutline
 TextBackground = TestBackground
+TextModule = TestModule
 
 class Book(Module):
     def __new__(cls, name=None, **kwargs):

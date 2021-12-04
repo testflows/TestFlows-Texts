@@ -42,7 +42,7 @@ __all__ = [
         "os", "sys",
         "Shell", "error", "errors",
         "TextBook", "TextChapter", "TextDocument", "TextPage", "TextSection", "TextParagraph",
-        "TextBackground", "TextOutline", "TextStep",
+        "TextBackground", "TextOutline", "TextStep", "TextModule",
         "Book", "Chapter", "Document", "Page", "Section", "Paragraph", "Background", "Example", "Outline",
         "Context",
         "config",
