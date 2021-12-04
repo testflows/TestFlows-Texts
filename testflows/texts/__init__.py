@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 __author__ = "Vitaliy Zakaznikov"
-__version__ = "1.7.__VERSION__"
+__version__ = "1.8.__VERSION__"
 __license__ = f"""
 Copyright 2021 Katteli Inc.
 TestFlows.com Open-Source Software Testing Framework (http://testflows.com)
@@ -37,8 +37,10 @@ from testflows.connect import Shell
 from testflows.asserts import error, errors
 
 from .core import *
+from .executable import execute
 
 __all__ = [
+        "execute",
         "os", "sys",
         "Shell", "error", "errors",
         "TextBook", "TextChapter", "TextDocument", "TextPage", "TextSection", "TextParagraph",
@@ -47,7 +49,7 @@ __all__ = [
         "Context",
         "config",
         "NullStep",
-        "Step", "Given", "When", "Then", "And", "But", "By", "Finally",
+        "Step", "Given", "When", "Then", "And", "But", "By", "Finally", "Module",
         "loads", "ordered", "retry", "retries",
         "has",
         "Flags",

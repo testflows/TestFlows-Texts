@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import re
+import inspect
+
+from textwrap import indent, dedent
+from tempfile import NamedTemporaryFile
+from linecache import cache as code_cache
 
 from testflows._core.contrib.arpeggio import RegExMatch as _
 from testflows._core.contrib.arpeggio import OneOrMore, ZeroOrMore, EOF, Optional, Not
@@ -39,8 +44,38 @@ class Visitor(PTNodeVisitor):
         for child in node:
             lines = child.flat_str()
             if child.rule_name == "exec_code":
-                exec("\n".join(lines.strip().splitlines()[1:-1]),
-                    visitor.globals, visitor.locals)
+                with NamedTemporaryFile("w+", suffix=".py") as code_file:
+                    code_file.write(
+                        "\n".join(lines.strip().splitlines()[1:-1])
+                    )
+                    code_file.seek(0)
+                    code_file.flush()
+                    visitor.locals["__file__"] = code_file.name
+
+                    source_code = code_file.read()
+                    source_name = code_file.name
+            
+                    code_cache[source_name] = (
+                        len(source_code), None,
+                        [line+'\n' for line in source_code.splitlines()], source_name
+                    )
+
+                    try:
+                        exec(compile(source_code, source_name, 'exec'),
+                             visitor.globals, visitor.locals)   
+                    except Exception as e:
+                        exc_tb= e.__traceback__.tb_next
+                        split_lines = dedent(lines.strip()).splitlines()
+                        line_fmt = "  %" + str(len(str(len(split_lines)))) + "d|  %s"
+                        line_at_fmt = "  %" + str(len(str(len(split_lines)))) + "d|> %s"
+                        numbered_lines = "\n".join(
+                            [line_fmt % (n,l) if n != exc_tb.tb_lineno else line_at_fmt % (n,l) for n, l in enumerate(
+                                split_lines)])
+                        code_exc = type(e)(str(e) + "\n\nCode block (in document):\n"
+                             + numbered_lines)
+                        code_exc.with_traceback(exc_tb)
+                        raise code_exc from None
+
             else:
                 text(lines, dedent=False, end="")
 
