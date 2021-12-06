@@ -18,74 +18,128 @@ import inspect
 from textwrap import indent, dedent
 from tempfile import NamedTemporaryFile
 from linecache import cache as code_cache
+from contextlib import ExitStack
 
 from testflows._core.contrib.arpeggio import RegExMatch as _
 from testflows._core.contrib.arpeggio import OneOrMore, ZeroOrMore, EOF, Optional, Not
 from testflows._core.contrib.arpeggio import ParserPython as PEGParser
 from testflows._core.contrib.arpeggio import PTNodeVisitor, visit_parse_tree
+from testflows._core.exceptions import exception as get_exception
 
 from testflows.texts import *
 
+DummySection = NullStep
+
+class TestStack(ExitStack):
+    def push_context(self, cm):
+        return super(TestStack, self).enter_context(cm)
+
+    def pop_context(self):
+        """Pop and close last context manager from stack.
+        """
+        is_sync, cb = self._exit_callbacks.pop()
+        assert is_sync
+        cb(None, None, None)
+
 
 class Visitor(PTNodeVisitor):
-    def __init__(self, *args, **kwargs):
-        self.current_test = None
+    def __init__(self, stack, source_data, *args, **kwargs):
+        self.stack = stack
+        self.source_data = source_data
         self.globals = globals()
         self.locals = {}
+        self.current_level = 0
         super(Visitor, self).__init__(*args, **kwargs)
 
     def visit_header(self, node, children):
-        with Section("header"):
-            lines = node.flat_str()
-            text(lines, dedent=False, end="")
+        self.process(node)
 
-    def process_intro_or_section(visitor, node):
+    def execute(visitor, node):
         visitor.locals["self"] = current()
-        for child in node:
-            lines = child.flat_str()
-            if child.rule_name == "exec_code":
-                with NamedTemporaryFile("w+", suffix=".py") as code_file:
-                    code_file.write(
-                        "\n".join(lines.strip().splitlines()[1:-1])
-                    )
-                    code_file.seek(0)
-                    code_file.flush()
-                    visitor.locals["__file__"] = code_file.name
 
-                    source_code = code_file.read()
-                    source_name = code_file.name
-            
-                    code_cache[source_name] = (
-                        len(source_code), None,
-                        [line+'\n' for line in source_code.splitlines()], source_name
-                    )
+        position = node.position
+        lines = node.flat_str()
 
-                    try:
-                        exec(compile(source_code, source_name, 'exec'),
-                             visitor.globals, visitor.locals)   
-                    except Exception as e:
-                        exc_tb= e.__traceback__.tb_next
-                        split_lines = dedent(lines.strip()).splitlines()
-                        line_fmt = "  %" + str(len(str(len(split_lines)))) + "d|  %s"
-                        line_at_fmt = "  %" + str(len(str(len(split_lines)))) + "d|> %s"
-                        numbered_lines = "\n".join(
-                            [line_fmt % (n,l) if n != exc_tb.tb_lineno else line_at_fmt % (n,l) for n, l in enumerate(
-                                split_lines)])
-                        code_exc = type(e)(str(e) + "\n\nCode block (in document):\n"
-                             + numbered_lines)
-                        code_exc.with_traceback(exc_tb)
-                        raise code_exc from None
-
+        if node.rule_name == "exec_code":
+            exec_lines = "\n".join(lines.strip().splitlines()[1:-1])
+        else:
+            if lines.endswith('"'):
+                end = lines.rsplit('"')[-1]
+                exec_lines = fr'''text(fr"""{lines}""", dedent=False, end='{end}')'''
             else:
-                text(lines, dedent=False, end="")
+                exec_lines = f'text(fr"""{lines}""", dedent=False, end="")'
+
+        with NamedTemporaryFile("w+", suffix=".py") as code_file:
+            code_file.write(exec_lines)
+            code_file.seek(0)
+            code_file.flush()
+            visitor.locals["__file__"] = code_file.name
+
+            source_code = code_file.read()
+            source_name = code_file.name
+    
+            code_cache[source_name] = (
+                len(source_code), None,
+                [line+'\n' for line in source_code.splitlines()], source_name
+            )
+
+            try:
+                exec(compile(source_code, source_name, 'exec'),
+                        visitor.globals, visitor.locals)   
+            except Exception as e:
+                exc_tb = e.__traceback__
+                syntax_error = isinstance(e, SyntaxError)
+
+                if syntax_error:
+                    tb_lineno = e.lineno
+                else:
+                    exc_tb = exc_tb.tb_next
+                    tb_lineno = exc_tb.tb_lineno
+        
+                split_lines = lines.splitlines()
+
+                code_offset = 0
+                if node.rule_name == "exec_code":
+                    code_offset = 1
+                line_offset = visitor.source_data[:position].count("\n")
+
+                line_fmt = "  %" + str(len(str(len(split_lines) + line_offset))) + "d|  %s"
+                line_at_fmt = "  %" + str(len(str(len(split_lines) + line_offset))) + "d|> %s"
+
+                numbered_lines = "\n".join(
+                    [line_fmt % (n + line_offset,l) if n != tb_lineno + code_offset else line_at_fmt % (n + line_offset,l) for n, l in enumerate(
+                        split_lines, 1)])
+
+                code_exc = type(e)(str(e) + f"\n\n{'Syntax Error' if syntax_error else 'Error'} occured in the following text:\n\n"
+                        + numbered_lines)
+
+                code_exc.with_traceback(exc_tb)
+                err(f"{e.__class__.__name__}\n" + get_exception(type(e), code_exc, code_exc.__traceback__))
+
+    def process(self, node):
+        for child in node:
+            self.execute(child)
 
     def visit_intro(self, node, children):
-        self.process_intro_or_section(node)
+        self.process(node)
 
     def visit_section(self, node, children):
-        with Section(node.heading.heading_name.value.strip()):
-            self.process_intro_or_section(node)
+        section_level = node[0].value.count("#")
+        
+        assert self.current_level >= 0, "current level is invalid"
+        
+        section = Section(node.heading.heading_name.value.strip(), context=SharedContext(current().context))
 
+        if section_level > self.current_level:
+            for i in range(section_level - self.current_level - 1):
+                self.stack.push_context(DummySection())
+        else:
+            for i in range(self.current_level - section_level + 1):
+                self.stack.pop_context()
+
+        self.stack.push_context(section)
+        self.current_level = section_level
+        self.process(node)
 
 
 def Parser():
@@ -94,26 +148,29 @@ def Parser():
     def line():
         return _(r"[^\n]*\n")
 
+    def paragraph():
+        return OneOrMore(Not(exec_code_start), _(r"[^\n]+\n"))
+
     def header_sep():
-        return _(r"---\s*?\n")
+        return _(r"---[ \t]*\n")
 
     def header():
         return header_sep, ZeroOrMore(Not(header_sep), line), header_sep
 
     def exec_code_start():
-        return _(r"\s?\s?\s?[`~][`~][`~]python:testflows\s*?\n")
+        return _(r"[ \t]?[ \t]?[ \t]?[`~][`~][`~]python:testflows[ \t]*\n")
     
     def exec_code_end():
-        return _(r"\s?\s?\s?[`~][`~][`~]\s*?\n")
+        return (_(r"[ \t]?[ \t]?[ \t]?[`~][`~][`~][ \t]*"), [_(r"\n"), EOF])
 
     def exec_code():
         return exec_code_start, ZeroOrMore(Not(exec_code_end), line), exec_code_end
 
     def intro():
-        return ZeroOrMore(Not(heading), [exec_code, line])
+        return ZeroOrMore(Not(heading), [exec_code, paragraph, line])
 
     def section():
-        return heading, ZeroOrMore(Not(heading), [exec_code, line])
+        return heading, ZeroOrMore(Not(heading), [exec_code, paragraph, line])
 
     def heading():
         return [
@@ -125,7 +182,7 @@ def Parser():
         return _(r"[^\n]+")
 
     def document():
-        return Optional(header, intro, ZeroOrMore(section)), EOF
+        return Optional(Optional(header), intro, ZeroOrMore(section))
 
     return PEGParser(document, skipws=False)
 
@@ -139,4 +196,5 @@ def execute(source):
     source_data = source.read()
     tree = parser.parse(source_data)
 
-    visit_parse_tree(tree, Visitor())
+    with TestStack() as stack:
+        visit_parse_tree(tree, Visitor(stack, source_data))
