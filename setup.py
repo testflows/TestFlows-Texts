@@ -41,6 +41,6 @@ setup(
     package_data={
     },
     install_requires=[
-        "testflows>=1.7.72"
+        "testflows>=1.7.73"
     ],
 )

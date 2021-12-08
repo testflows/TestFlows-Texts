@@ -147,9 +147,15 @@ def Parser():
     """
     def line():
         return _(r"[^\n]*\n")
+    
+    def non_empty_line():
+        return _(r"[^\n]+\n")
+
+    def final_line():
+        return _(r"[^\n]+"), EOF
 
     def paragraph():
-        return OneOrMore(Not(exec_code_start), _(r"[^\n]+\n"))
+        return OneOrMore(Not(exec_code_start), [non_empty_line, final_line])
 
     def header_sep():
         return _(r"---[ \t]*\n")
@@ -167,10 +173,10 @@ def Parser():
         return exec_code_start, ZeroOrMore(Not(exec_code_end), line), exec_code_end
 
     def intro():
-        return ZeroOrMore(Not(heading), [exec_code, paragraph, line])
+        return ZeroOrMore(Not(heading), [exec_code, paragraph, line, final_line])
 
     def section():
-        return heading, ZeroOrMore(Not(heading), [exec_code, paragraph, line])
+        return heading, ZeroOrMore(Not(heading), [exec_code, paragraph, line, final_line])
 
     def heading():
         return [
@@ -194,7 +200,14 @@ def execute(source):
     """
     parser = Parser()
     source_data = source.read()
+    
+    if not source_data:
+        fail(f"source file '{os.path.abspath(source.name)}' is empty")
+    
     tree = parser.parse(source_data)
+
+    if tree is None:
+        err(f"parsing {os.path.abspath(source.name)} failed")
 
     with TestStack() as stack:
         visit_parse_tree(tree, Visitor(stack, source_data))

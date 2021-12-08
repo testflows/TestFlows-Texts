@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 import sys
 import testflows._core.cli.arg.type as argtype
 
@@ -49,9 +50,10 @@ class Handler(HandlerBase):
             formatter_class=HelpFormatter)
 
         parser.add_argument("input", metavar="input", type=argtype.file("r", bufsize=1, encoding="utf-8"),
-                            help="input file, use '-' for stdin")
-        parser.add_argument("output", metavar="output", type=argtype.file("w", bufsize=1, encoding="utf-8"),
-                            help='output file')
+                            nargs="?", help="input file, use '-' for stdin", default="-")
+        parser.add_argument("output", metavar="output", type=str, nargs="?",
+                            help=('output file, default: \'.\' (current directory) or\n'
+                                  'if input is stdin then \'-\' (stdout).'), default="")
 
         parser.set_defaults(func=cls())
 
@@ -59,7 +61,25 @@ class Handler(HandlerBase):
         name = str(args.input.name)
         if name == "<stdin>":
             name = "document"
+        
+        if not args.output:
+            if str(args.input.name) == "<stdin>":
+                args.output = "-"
+            else:
+                args.output = "."
 
-        with Document(name):
-            current().context.file = args.output
-            execute(source=args.input)
+        if args.output == ".":
+            directory, filename = os.path.split(args.input.name)
+            args.output = os.path.join(directory, "".join(filename.rsplit(".", 1)[:1] + [".md"]))
+
+        args.output = argtype.file("w", bufsize=1, encoding="utf-8")(args.output)
+
+        if str(args.output.name) == "<stdout>":
+            sys.argv += ["--output", "quiet"]
+
+        try:
+            with Document(os.path.basename(name)):
+                current().context.file = args.output
+                execute(source=args.input)
+        finally:
+            args.output.flush()
