@@ -21,6 +21,8 @@ TextOutline = TestOutline
 TextBackground = TestBackground
 TextModule = TestModule
 
+triple_quotes = '"""'
+
 class Book(Module):
     def __new__(cls, name=None, **kwargs):
         kwargs["subtype"] = TestSubType.Book

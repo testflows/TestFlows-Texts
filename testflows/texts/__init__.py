@@ -86,5 +86,7 @@ __all__ = [
         "objects",
         "name",
         "utils",
-        "rsa"
+        "rsa",
+        # common utilities
+        "triple_quotes"
     ]
