@@ -31,7 +31,7 @@ pip3 install --upgrade testflows.texts
 
 The documentation source file are written in Markdown with the `python:testflows`
 code blocks embedded in the document that define any Python code that gets 
-executed during the execution documentation source file usin the `tfs document run`
+executed during the execution documentation source file using the `tfs document run`
 command.
 
 ```markdown
