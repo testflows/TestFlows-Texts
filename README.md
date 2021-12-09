@@ -208,6 +208,61 @@ as part of the process of writing a technical article.
 Moreover, we can rerun our documentation any time a new version of `ls` utility is ready
 to be shipped to make sure our documentation is still valid and the software still behaves as described. 
 
+By the way, here is the final Markdown we get
+
+```markdown
+    # TestFlows Texts Tutorial
+
+    Let's see `testflows.texts` in action by writing auto verified
+    documentation for the `-a` option of the `ls` command.
+
+    The man page for the `ls` utility says the following:
+
+    ```
+    NAME
+           ls - list directory contents
+
+    SYNOPSIS
+           ls [OPTION]... [FILE]...
+
+    DESCRIPTION
+           List  information  about  the FILEs (the current directory by default).
+           Sort entries alphabetically if none of -cftuvSUX nor --sort  is  speci‐
+           fied.
+
+           Mandatory  arguments  to  long  options are mandatory for short options
+           too.
+
+           -a, --all
+                  do not ignore entries starting with .
+    ```
+
+    Let's see how `-a` option works.
+
+    First, create a file that starts with `.` using the `touch` command
+
+
+    ```bash
+    touch .hidden_file
+    ```
+
+
+    Now we let's run
+
+
+    ```bash
+    ls -a | grep .hidden_file
+    ```
+
+    and you should see our `.hidden_file` listed
+
+    ```bash
+    .hidden_file
+    ```
+
+    Voilà, `ls -a` does indeed show hidden files!
+```
+
 ## Passing Arguments
 
 Execution of any `.tfd` file using `tfs document run` command results in execution of a document writer program.
