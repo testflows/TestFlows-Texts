@@ -19,6 +19,7 @@ $ tfs document run --input my_document.tfd --output my_document.md
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Writing Auto Verified Docs](#writing-auto-verified-docs)
+* [Passing Arguments](#passing-arguments)
 * [Debugging Errors](#debugging-errors)
 * [Using `tfs document run`](#using-tfs-document-run)
 
@@ -117,8 +118,8 @@ of `python:testflows` code blocks that contain executable Python code.
 
 ## Passing Arguments
 
-Execution of any `.tfd` file using `tfs document run` command results in execution of a writer program.
-This is similar to the test programs you write with [TestFlows](https://testflows.com).
+Execution of any `.tfd` file using `tfs document run` command results in execution of a document writer program.
+This is similar to the test programs you write with [TestFlows.com Open-Source Testing Framework](https://testflows.com).
 
 You can control different aspects of writer program execution by passing arguments as follows.
 
