@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 __author__ = "Vitaliy Zakaznikov"
-__version__ = "1.8.__VERSION__"
+__version__ = "2.0.__VERSION__"
 __license__ = f"""
 Copyright 2021 Katteli Inc.
 TestFlows.com Open-Source Software Testing Framework (http://testflows.com)
