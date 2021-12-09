@@ -78,7 +78,7 @@ Follow the example Markdown document to get to know how you can write auto verif
     You can double your curly braces to escape them when substitution expression is not needed
     using `{{` or `}}`.
     
-    By the way, your document can't contain any triple double quotes `"""`. If you need them then you have to
+    By the way, your document can't contain any triple double quotes. If you need them then you have to
     add them inside the `python:testflows` code block using `text()` function. For example,
     
     ```python:testflows
