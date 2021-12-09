@@ -19,6 +19,7 @@ $ tfs document run --input my_document.tfd --output my_document.md
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Writing Auto Verified Docs](#writing-auto-verified-docs)
+* [Tutorial](#tutorial)
 * [Passing Arguments](#passing-arguments)
 * [Controlling Output Format](#controlling-output-format)
 * [Debugging Errors](#debugging-errors)
@@ -116,6 +117,96 @@ This file is written using Markdown where you can have any number
 of `python:testflows` code blocks that contain executable Python code.
 ...
 ```
+
+## Tutorial
+
+Here a simple tutorial to introduce you to using TestFlows Texts.
+
+```markdown
+    # TestFlows Texts Tutorial
+
+    Let's see `testflows.texts` in action by writing auto verified
+    documentation for the `-a` option of the `ls` command.
+
+    The man page for the `ls` utility says the following:
+
+    ```
+    NAME
+           ls - list directory contents
+
+    SYNOPSIS
+           ls [OPTION]... [FILE]...
+
+    DESCRIPTION
+           List  information  about  the FILEs (the current directory by default).
+           Sort entries alphabetically if none of -cftuvSUX nor --sort  is  speci‐
+           fied.
+
+           Mandatory  arguments  to  long  options are mandatory for short options
+           too.
+
+           -a, --all
+                  do not ignore entries starting with .
+    ```
+
+    Let's see how `-a` option works.
+
+    First, create a file that starts with `.` using the `touch` command
+
+    ```python:testflows
+    from subprocess import run
+
+    command = "touch .hidden_file"
+    ```
+
+    ```bash
+    {command}
+    ```
+
+    ```python:testflows
+    run(command, shell=True, check=True)
+    # add clean up at the end of our document generation
+    cleanup(run, "rm -rf .hidden_file", shell=True, check=True)
+    ```
+
+    Now we let's run
+
+    ```python:testflows
+
+    ls_a_command = "ls -a | grep .hidden_file"
+
+    cmd = run(ls_a_command, shell=True, capture_output=True, text=True)
+
+    assert cmd.returncode == 0, "returncode {cmd.returncode} is not 0"
+    assert ".hidden_file" in cmd.stdout, "hidden file '.hidden_file' in not in the outout"
+    ```
+
+    ```bash
+    {ls_a_command}
+    ```
+
+    and you should see our `.hidden_file` listed
+
+    ```bash
+    {cmd.stdout.strip()}
+    ```
+
+    Voilà, `ls -a` does indeed show hidden files!
+```
+
+Now save this source file as `tutorial.tfd` and execute it to produce the final Markdown
+file `tutorial.md` that we can use on our documentation site.
+
+```
+tfs document run -i tutorial.tfd -o tutorial.md
+```
+
+We know that the instructions in this article are correct as `testflows.texts` has executed them during
+writing of `tutorial.md` just like a technical writer would execute the commands
+as part of the process of writing a technical article.
+
+Moreover, we can rerun our documentation any time a new version of `ls` utility is ready
+to be shipped to make sure our documentation is still valid and the software still behaves as described. 
 
 ## Passing Arguments
 
