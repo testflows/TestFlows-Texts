@@ -69,17 +69,21 @@ Follow the example Markdown document to get to know how you can write auto verif
     See https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals.
     
     Here is a quick example where I will substitute the value of `msg` variable next {msg}.
-    But with Python f-strings you can specify even complex expressions like we can 
+    But with Python f-strings you can specify even complex expressions. For example, we can 
     convert our string in `msg` to title case as follows {msg.title()}.
     
     You can double your curly braces to escape them when substitution expression is not needed
     as `{{` or `}}`.
     
-    You document can't contain any triple double quotes `"""`. If you need them then you have to
+    By the way, your document can't contain any triple double quotes `"""`. If you need them then you have to
     add them inside the `python:testflows` code block using `text()` function. For example,
     
     ```python:testflows
     text('"""')
     ```
+    
+    Well, this is pretty much it. With `testflows.texts` you have full power of TestFlows test framework
+    and Python language to make sure your documentation always stays to date. In fact, 
+    running `.tfd` files for new versions of your software becomes part of release process
 ```
 
