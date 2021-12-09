@@ -90,6 +90,24 @@ Follow the example Markdown document to get to know how you can write auto verif
     stays to date.
 ```
 
+Now if you want to give it try save the above Markdown into a file `test.tfd` (make sure to remove the indentation).
+Then you can run it as
+
+```bash
+$ tfs document run -i test.tfd -o -
+```
+
+and you should get the output of the final Markdown document printed to the stdout.
+
+```bash
+$ tfs document run -i test.tfd -o -
+## This is a heading
+
+This file is written using Markdown where you can have any number
+of `python:testflows` code blocks that contain executable Python code.
+...
+```
+
 ## Using `tfs document run`
 
 ```bash
