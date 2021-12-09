@@ -124,7 +124,7 @@ This is similar to the test programs you write with [TestFlows.com Open-Source T
 You can control different aspects of writer program execution by passing arguments as follows.
 
 ```bash
-tfs document run -t test.tfd -o test.md -- <write program arguments>
+tfs document run -t test.tfd -o test.md -- <writer program arguments>
 ```
 
 For example, to see all the arguments your document writer program can take pass `-h/--help` argument
