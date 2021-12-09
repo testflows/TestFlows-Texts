@@ -96,8 +96,15 @@ class Handler(HandlerBase):
             args.input = [args.input]
 
         with Module("documents") if len(args.input) > 1 else NullStep():
+            relative_directory = ""
+    
             for doc in args.input:
                 output = args.output
+                
+                if len(args.input) > 1:
+                    commondir = os.path.commonpath([i.name for i in args.input])
+                    relative_directory, filename = os.path.split(os.path.relpath(doc.name, commondir))
+
                 if not output:
                     if doc.name == "<stdin>":
                         output = "-"
@@ -105,9 +112,7 @@ class Handler(HandlerBase):
                         output = "."
 
                 elif len(args.input) > 1:
-                    commondir = os.path.commonprefix([i.name for i in args.input])
-                    directory, filename = os.path.split(os.path.relpath(doc.name, commondir))
-                    directory = os.path.join(output, directory)
+                    directory = os.path.join(output, relative_directory)
                     os.makedirs(directory, exist_ok=True)                  
                     output = os.path.join(directory, "".join(filename.rsplit(".", 1)[:1] + [".md"]))
 
@@ -136,7 +141,7 @@ class Handler(HandlerBase):
                     sys.argv += ["--output", "quiet"]
 
                 try:
-                    with Document(os.path.basename(doc.name) if doc.name != "<stdin>" else "document"):
+                    with Document(os.path.join(relative_directory, os.path.basename(doc.name) if doc.name != "<stdin>" else "document")):
                         current().context.file = output
                         execute(source=doc)
                 finally:
