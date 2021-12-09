@@ -152,7 +152,6 @@ Here a simple tutorial to introduce you to using TestFlows Texts.
     Let's see how `-a` option works.
 
     First, create a file that starts with `.` using the `touch` command
-
     ```python:testflows
     from subprocess import run
 
@@ -162,7 +161,6 @@ Here a simple tutorial to introduce you to using TestFlows Texts.
     ```bash
     {command}
     ```
-
     ```python:testflows
     run(command, shell=True, check=True)
     # add clean up at the end of our document generation
@@ -170,7 +168,6 @@ Here a simple tutorial to introduce you to using TestFlows Texts.
     ```
 
     Now we let's run
-
     ```python:testflows
 
     ls_a_command = "ls -a | grep .hidden_file"
@@ -241,14 +238,11 @@ By the way, here is the final Markdown we get
 
     First, create a file that starts with `.` using the `touch` command
 
-
     ```bash
     touch .hidden_file
     ```
 
-
     Now we let's run
-
 
     ```bash
     ls -a | grep .hidden_file
