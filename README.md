@@ -20,6 +20,7 @@ $ tfs document run --input my_document.tfd --output my_document.md
 * [Installation](#installation)
 * [Writing Auto Verified Docs](#writing-auto-verified-docs)
 * [Passing Arguments](#passing-arguments)
+* [Controlling Output Format)(#controlling-output-format)
 * [Debugging Errors](#debugging-errors)
 * [Using `tfs document run`](#using-tfs-document-run)
 
@@ -132,6 +133,18 @@ For example, to see all the arguments your document writer program can take pass
 ```bash
 tfs document run -- --help
 ```
+
+## Controlling Output Format
+
+You can control output format by passing `-o/--output` argument to your writer program.
+
+For example,
+
+```bash
+tfs document run -i test.tfd -o test.md -- --output classic
+```
+
+See `-h/--help` for other formats.
 
 ## Debugging Errors
 
