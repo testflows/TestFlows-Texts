@@ -90,3 +90,75 @@ Follow the example Markdown document to get to know how you can write auto verif
     stays to date.
 ```
 
+## Using `tfs document run`
+
+```bash
+$ tfs document run -h
+usage: tfs document run [-h] [-i path [path ...]] [-o [path]] [-f]
+
+  ---- o o o ----
+ |   o       o   |
+ | 1 o 10010 o 0 |
+ |   o       o   |    TestFlows.com Open-Source Software Testing Framework v1.7.211208.1222904
+  ---  o o oxx --
+ /           xx   \
+/  ^^^        xx   \
+ ------------------
+
+Run executable document.
+
+Executable documents are Markdown documents that
+contain `python:testflows` code blocks which may contain
+any Python code that will be run during document execution.  
+
+All text within executable document except for the
+`python:testflows` code blocks are treated as Python f-strings.
+Therefore, you must escape any `{`, `}` characters by doubling
+them, for example: `{{` or `}}`, otherwise they will be treated
+as f-string expressions.
+
+Text must not contain triple quotes `"""`. If you need them
+then you must use `text()` function within `python:testflows` code block
+to explicitly add them to the the text. 
+
+For example:
+    ```python:testflows
+    text('adding triple quotes """ to text', end="")
+    ``` 
+
+Specify '--' at the end of the command line options to pass
+options to the executable document writer program itself.
+
+For example:
+   tfs document run -i <path>--o <path> -- --help
+
+You must set PYTHONPATH when modules needed by the executable
+document are not in the default path.
+
+For example:
+   PYTHONPATH=<path/to/module> tfs document run -i <path> -o <path>
+
+The `--input` can take multiple files and in such case if `--output`
+is specified it is treated as directory name.
+
+For example,
+   tfs document run -i `find $(pwd) -name "*.tfd"` -o . -f 
+or
+   tfs document run -i `find $(pwd) -name "*.tfd"` -o /path/to/output/dir -f 
+
+If input is '-' (stdin) and output is '.' then output file is 'document.md'
+which is created in the current working directory.
+
+optional arguments:
+  -h, --help                                   show this help message and exit
+  -i path [path ...], --input path [path ...]  input file, use '-' for stdin, default: stdin
+  -o [path], --output [path]                   output file or directory if multiple input files are
+                                               passed, default: '.' or if input is stdin then '-'.
+                                               The '.' means to create output file in the same
+                                               directory as the input file having .md extension and
+                                               the '-' means output to stdout.
+  -f, --force                                  force to override existing output file if it already
+                                               exists
+
+TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc.
+```
