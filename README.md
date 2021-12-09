@@ -173,9 +173,9 @@ when executed will result in the SyntaxError.
                            6|  ```
 ```
 
-### Triple Double Quotes
+### Triple Quotes
 
-If your text have triple double quotes like `"""` it will result in an error.
+If your text have triple quotes like `"""` it will result in an error.
 
 For example,
 
@@ -196,7 +196,7 @@ when executed will result in `SyntaxError`.
 
                          Syntax Error occured in the following text:
 
-                           3|> This test has """ triple double quotes.
+                           3|> This test has """ triple quotes.
 ```
 
 The workaround is to use `{triple_quotes}` expression to output `"""` inside the `python:testflows` code block.
