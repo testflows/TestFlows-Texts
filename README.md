@@ -29,22 +29,35 @@ pip3 install --upgrade testflows.texts
 
 ## Writing Auto Verified Docs
 
-The documentation source file are written in Markdown with the `python:testflows`
-code blocks embedded in the document that define any Python code that gets 
-executed during the execution documentation source file using the `tfs document run`
-command.
+Follow the example Markdown document to get to know how you can write auto verified docs yourself.
 
 ```markdown
     ## This is a heading
 
-    This file is written using Markdown.
-
-    The following `python:testflows` block will be removed
-    from the final Markdown document where you can add any text from the Python
-    code to the document using `text()` function. 
+    This file is written using Markdown where you can have any number
+    of `python:testflows` code block that contain executable Python code.
+    
+    ```python:testflows
+    # This is Python code that will be executed when .tfd document is run.
+    msg = "Hello TestFlows Texts"
+    ```
+ 
+    The scope is shared between all the code blocks in the same document.
+    
+    ```python:testflows
+    # `msg` variable is can now be accessed in any following `python:testflows` blocks
+    
+    new_msg = msg + " Thanks for making verifying docs so easy!"
+    ```
+    
+    The output of running `.tfd` document is the final `.md` file
+    with all the `python:testflows` code blocks removed and replaced with any
+    text added to the document using the `text()` function.
 
     ```python:testflows
-    # This is executable Python code
+    # Let's use `text()` function to add some text to our document
+    # dynamically in our Python code.
+ 
     text("add this line to the final Markdown document")
     ```
 ```
