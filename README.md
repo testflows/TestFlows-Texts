@@ -15,10 +15,10 @@ Markdown documentation files.
 $ tfs document run --input my_document.tfd --output my_document.md
 ```
 
-## Table Of Contents
+---
 
 * [Requirements](#requirements)
-* [Install](#install)
+* [Installation](#installation)
 * [Writing Auto Verified Docs](#writing-auto-verified-docs)
 * [Debugging Errors](#debugging-errors)
 * [Using `tfs document run`](#using-tfs-document-run)
@@ -27,7 +27,7 @@ $ tfs document run --input my_document.tfd --output my_document.md
 
 * Python3 >= 3.8
 
-## Install
+## Installation
 
 You can install `testflows.texts` using `pip3` command:
 
