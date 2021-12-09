@@ -199,7 +199,7 @@ when executed will result in `SyntaxError`.
                            3|> This test has """ triple quotes.
 ```
 
-The workaround is to use `{triple_quotes}` expression to output `"""` inside the `python:testflows` code block.
+The workaround is to use `{triple_quotes}` expression to output `"""`.
 
 For example,
 
