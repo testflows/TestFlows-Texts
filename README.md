@@ -15,8 +15,6 @@ Markdown documentation files.
 $ tfs document run --input my_document.tfd --output my_document.md
 ```
 
----
-
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Writing Auto Verified Docs](#writing-auto-verified-docs)
