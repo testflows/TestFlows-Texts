@@ -123,7 +123,7 @@ to explicitly add them to the the text.
 
 For example:
     ```python:testflows
-    text('adding triple quotes """ to text', end="")
+    text('adding triple quotes """ to text')
     ``` 
 
 Specify '--' at the end of the command line options to pass
