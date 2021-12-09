@@ -115,7 +115,7 @@ of `python:testflows` code blocks that contain executable Python code.
 ...
 ```
 
-## Passing Arguments to Writer Program
+## Passing Arguments
 
 Execution of any `.tfd` file using `tfs document run` command results in execution of a writer program.
 This is similar to the test programs you write with [TestFlows](https://testflows.com).
