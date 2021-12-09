@@ -20,7 +20,7 @@ $ tfs document run --input my_document.tfd --output my_document.md
 * [Installation](#installation)
 * [Writing Auto Verified Docs](#writing-auto-verified-docs)
 * [Passing Arguments](#passing-arguments)
-* [Controlling Output Format)(#controlling-output-format)
+* [Controlling Output Format](#controlling-output-format)
 * [Debugging Errors](#debugging-errors)
 * [Using `tfs document run`](#using-tfs-document-run)
 
