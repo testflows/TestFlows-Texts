@@ -47,12 +47,16 @@ class Handler(HandlerBase):
 
             Text must not contain triple quotes `\"\"\"`. If you need them
             then you must use `text()` function within `python:testflows` code block
-            to explicitly add them to the the text. 
+            to explicitly add them to the the text or use `{triple_quotes}` expression. 
 
             For example:
                 ```python:testflows
                 text('adding triple quotes \"\"\" to text')
                 ``` 
+
+                or
+
+                {triple_quotes}
 
             Specify '--' at the end of the command line options to pass
             options to the executable document writer program itself.

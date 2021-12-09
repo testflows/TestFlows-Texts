@@ -249,7 +249,7 @@ as f-string expressions.
 
 Text must not contain triple quotes `"""`. If you need them
 then you must use either `text()` function within `python:testflows` code block
-to explicitly add them to the the text or `{triple_quotes}` expression. 
+to explicitly add them to the the text or use `{triple_quotes}` expression. 
 
 For example:
     ```python:testflows
