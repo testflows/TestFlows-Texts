@@ -15,6 +15,14 @@ Markdown documentation files.
 $ tfs document run --input my_document.tfd --output my_document.md
 ```
 
+## Table Of Contents
+
+* [Requirements](#requirements)
+* [Install](#install)
+* [Writing Auto Verified Docs](#writing-auto-verified-docs)
+* [Debugging Errors](#debugging-errors)
+* [Using `tfs document run`](#using-tfs-document-run)
+
 ## Requirements
 
 * Python3 >= 3.8
