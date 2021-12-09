@@ -3,8 +3,7 @@ TestFlows.com Open-Source Software Testing Framework Texts
 
 Use `testflows.texts` Python module to help you write auto verified software documentation
 by combining your text with the verification procedure of the described functionality
-in the same source file while leveraging the power and flexibility of TestFlows
-test framework. See https://testflows.com.
+in the same source file while leveraging the power and flexibility of [TestFlows.com Open-Source Test Framework](https://testflows.com).
 
 Source files for auto verified documentation by convention have `.tfd` extension
 and are written using Markdown. Therefore, all `.tfd` files are valid
