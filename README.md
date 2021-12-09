@@ -37,7 +37,7 @@ Follow the example Markdown document to get to know how you can write auto verif
     ## This is a heading
 
     This file is written using Markdown where you can have any number
-    of `python:testflows` code block that contain executable Python code.
+    of `python:testflows` code blocks that contain executable Python code.
     
     ```python:testflows
     # This is Python code that will be executed when .tfd document is run.
@@ -48,32 +48,35 @@ Follow the example Markdown document to get to know how you can write auto verif
     The scope is shared between all the code blocks in the same document.
     
     ```python:testflows
-    # so `msg` variable can now be accessed in this `python:testflows` blocks
+    # so `msg` variable define above can also be accessed in this
+    # `python:testflows` code block
 
     new_msg = msg + " Thanks for making verifying docs so easy!"
     ```
     
-    The output of running `.tfd` document is the final `.md` file
-    with all the `python:testflows` code blocks removed and replaced with any
-    text added to the document using the `text()` function.
+    The output of executing `.tfd` document using `tfs document run`
+    is the final `.md` file with all the `python:testflows` code blocks
+    removed and replaced with the text added to the document using
+    the `text()` function.
 
     ```python:testflows
     # Let's use `text()` function to add some text to our document
-    # dynamically in our Python code.
+    # dynamically in our Python code
  
     text("add this line to the final Markdown document")
     ```
     
     Any text outside the `python:testflows` code blocks are treated as Python
     f-strings. This allows you to specify expressions for substitutions.
-    See https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals.
+    See [Python formatted string literals](https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals)
+    for more details.
     
-    Here is a quick example where I will substitute the value of `msg` variable next {msg}.
+    Here is an example where we will substitute the value of `msg` variable next {msg}.
     But with Python f-strings you can specify even complex expressions. For example, we can 
     convert our string in `msg` to title case as follows {msg.title()}.
     
     You can double your curly braces to escape them when substitution expression is not needed
-    as `{{` or `}}`.
+    using `{{` or `}}`.
     
     By the way, your document can't contain any triple double quotes `"""`. If you need them then you have to
     add them inside the `python:testflows` code block using `text()` function. For example,
@@ -82,8 +85,8 @@ Follow the example Markdown document to get to know how you can write auto verif
     text('"""')
     ```
     
-    Well, this is pretty much it. With `testflows.texts` you have full power of TestFlows test framework
-    and Python language to make sure your documentation always stays to date. In fact, 
-    running `.tfd` files for new versions of your software becomes part of release process
+    Well, this is pretty much it. With `testflows.texts` you have full power of full featured
+    test framework and Python language at your disposal to make sure your documentation always
+    stays to date.
 ```
 
