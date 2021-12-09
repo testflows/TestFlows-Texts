@@ -78,11 +78,11 @@ Follow the example Markdown document to get to know how you can write auto verif
     You can double your curly braces to escape them when substitution expression is not needed
     using `{{` or `}}`.
     
-    By the way, your document can't contain any triple double quotes. If you need them then you have to
-    add them inside the `python:testflows` code block using `text()` function. For example,
+    By the way, your document can't contain any triple quotes. If you need them then you have to
+    add them useing `{triple_quotes}` expression. For example,
     
-    ```python:testflows
-    text('"""')
+    ```markdown
+    This text has {triple_quotes} triple quotes.
     ```
     
     Well, this is pretty much it. With `testflows.texts` you have full power of full featured
@@ -106,6 +106,118 @@ $ tfs document run -i test.tfd -o -
 This file is written using Markdown where you can have any number
 of `python:testflows` code blocks that contain executable Python code.
 ...
+```
+
+## Debugging Errors
+
+Here are some common errors that you might run into while writing your `.tfd` source files.
+
+All exceptions will point to the line number where the error has occured..
+
+### Unescaped Curly Brackets
+
+If you forget to double your curly brackets when you are not using f-string expression
+then you will see an error.
+
+For example,
+
+```markdown
+Hello there
+
+Oops I forgot to double {quote} my curly brackets.
+```
+
+when executed will result in the `NameError`.
+
+```bash
+                10ms   ⟥⟤ Error test.tfd, /test.tfd, NameError
+                         Traceback (most recent call last):
+                           File "/tmp/tmp_ckk4f3m.py", line 1, in <module>
+                             text(fr"""Oops I forgot to double {quote} my curly brackets.
+                         NameError: name 'quote' is not defined
+
+                         Error occured in the following text:
+
+                           3|> Oops I forgot to double {quote} my curly brackets.
+```
+
+### Syntax Errors
+
+If you have a syntax error in the `python:testflows` block you will get an error.
+
+For example,
+
+```markdown
+    Hello there
+
+    ```python:testflows
+    x = 1
+    y = 2 boo 
+    ```
+```
+
+when executed will result in the SyntaxError.
+
+```bash
+                11ms   ⟥⟤ Error test.tfd, /test.tfd, SyntaxError
+                         Traceback (most recent call last):
+                           File "/home/user/.local/lib/python3.8/site-packages/testflows/texts/executable.py", line 87, in execute
+                             exec(compile(source_code, source_name, 'exec'),
+                         SyntaxError: invalid syntax (tmp7e6op1y_.py, line 2)
+
+                         Syntax Error occured in the following text:
+
+                           3|  ```python:testflows
+                           4|  x = 1
+                           5|> y = 2 boo 
+                           6|  ```
+```
+
+### Triple Double Quotes
+
+If your text have triple double quotes like `"""` it will result in an error.
+
+For example,
+
+```markdown
+Hello There
+
+This text has """ triple quotes.
+```
+
+when executed will result in `SyntaxError`.
+
+```bash
+                 9ms   ⟥⟤ Error test.tfd, /test.tfd, SyntaxError
+                         Traceback (most recent call last):
+                           File "/home/user/.local/lib/python3.8/site-packages/testflows/texts/executable.py", line 87, in execute
+                             exec(compile(source_code, source_name, 'exec'),
+                         SyntaxError: invalid syntax (tmph44nbvgo.py, line 1)
+
+                         Syntax Error occured in the following text:
+
+                           3|> This test has """ triple double quotes.
+```
+
+The workaround is to use `{triple_quotes}` expression to output `"""` inside the `python:testflows` code block.
+
+For example,
+
+```markdown
+    Hello There
+
+    This text has {triple_quotes} triple quotes.
+```
+
+where `triple_quotes` is provided by default by `testflows.texts` module. This is equivalent to the following.
+
+```markdown
+    ```python:testflows
+    triple_quotes = '"""'
+    ```
+    Hello There
+
+    This text has {triple_quotes} triple quotes.
 ```
 
 ## Using `tfs document run`
@@ -136,13 +248,17 @@ them, for example: `{{` or `}}`, otherwise they will be treated
 as f-string expressions.
 
 Text must not contain triple quotes `"""`. If you need them
-then you must use `text()` function within `python:testflows` code block
-to explicitly add them to the the text. 
+then you must use either `text()` function within `python:testflows` code block
+to explicitly add them to the the text or `{triple_quotes}` expression. 
 
 For example:
     ```python:testflows
     text('adding triple quotes """ to text')
     ``` 
+    or
+
+    {triple_quotes}
+    
 
 Specify '--' at the end of the command line options to pass
 options to the executable document writer program itself.
