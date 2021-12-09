@@ -51,14 +51,14 @@ class Handler(HandlerBase):
 
             For example:
                 ```python:testflows
-                text('adding triple quotes \"\"\" to text', end="")
+                text('adding triple quotes \"\"\" to text')
                 ``` 
 
             Specify '--' at the end of the command line options to pass
             options to the executable document writer program itself.
 
             For example:
-               tfs document run -i <path>--o <path> -- --help
+               tfs document run -i <path> -o <path> -- --help
 
             You must set PYTHONPATH when modules needed by the executable
             document are not in the default path.
