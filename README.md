@@ -75,7 +75,7 @@ Follow the example Markdown document to get to know how you can write auto verif
     But with Python f-strings you can specify even complex expressions. For example, we can 
     convert our string in `msg` to title case as follows {msg.title()}.
     
-    You can double your curly braces to escape them when substitution expression is not needed
+    You can double your curly brackets to escape them when substitution expression is not needed
     using `{{` or `}}`.
     
     By the way, your document can't contain any triple quotes. If you need them then you have to
