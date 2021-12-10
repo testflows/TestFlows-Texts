@@ -58,7 +58,7 @@ Follow the example Markdown document to get to know how you can write auto verif
     The scope is shared between all the code blocks in the same document.
     
     ```python:testflows
-    # so `msg` variable define above can also be accessed in this
+    # so `msg` variable defined above can also be accessed in this
     # `python:testflows` code block
 
     new_msg = msg + " Thanks for making verifying docs so easy!"
@@ -89,7 +89,7 @@ Follow the example Markdown document to get to know how you can write auto verif
     using `{{` or `}}`.
     
     By the way, your document can't contain any triple quotes. If you need them then you have to
-    add them useing `{triple_quotes}` expression. For example,
+    add them using `{triple_quotes}` expression. For example,
     
     ```markdown
     This text has {triple_quotes} triple quotes.
@@ -97,10 +97,10 @@ Follow the example Markdown document to get to know how you can write auto verif
     
     Well, this is pretty much it. With `testflows.texts` you have full power of full featured
     test framework and Python language at your disposal to make sure your documentation always
-    stays to date.
+    stays upto date.
 ```
 
-Now if you want to give it try save the above Markdown into a file `test.tfd` (make sure to remove the indentation).
+Now if you want to give it a try then save the above Markdown into `test.tfd` file but make sure to remove the indentation.
 Then you can run it as
 
 ```bash
@@ -120,7 +120,7 @@ of `python:testflows` code blocks that contain executable Python code.
 
 ## Tutorial
 
-Here a simple tutorial to introduce you to using TestFlows Texts.
+Here a simple tutorial to introduce you to using `testflows.texts`.
 
 ```markdown
     # TestFlows Texts Tutorial
@@ -290,7 +290,7 @@ See `-h/--help` for other formats.
 
 Here are some common errors that you might run into while writing your `.tfd` source files.
 
-All exceptions will point to the line number where the error has occured..
+All exceptions will point to the line number where the error has occured.
 
 ### Unescaped Curly Brackets
 
