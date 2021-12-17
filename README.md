@@ -167,7 +167,7 @@ Here a simple tutorial to introduce you to using `testflows.texts`.
     cleanup(run, "rm -rf .hidden_file", shell=True, check=True)
     ```
 
-    Now, let's run
+    Let's now run
     ```python:testflows
 
     ls_a_command = "ls -a | grep .hidden_file"
@@ -242,7 +242,7 @@ By the way, here is the final Markdown we get
     touch .hidden_file
     ```
 
-    Now we let's run
+    Let's now run
 
     ```bash
     ls -a | grep .hidden_file
